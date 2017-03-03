@@ -902,8 +902,8 @@ ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
       var map;
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 5,
-          center: new google.maps.LatLng(31.0902, -95.7129),
+          zoom: 7,
+          center: new google.maps.LatLng(44.3148, -85.6024),
           mapTypeId: 'roadmap'
         });
 
@@ -961,8 +961,9 @@ ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
         }
 
         $("#zoom-out").click('on', function(){
-            map.setZoom(5),
-            map.setCenter(31.0902, -95.7129);
+            map.setZoom(7),
+            // map.setCenter(31.0902, -95.7129);
+            map.setCenter(44.3148, -85.6024);
         });
 
         // Ignore the mess just use super_big_table
