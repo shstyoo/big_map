@@ -893,6 +893,12 @@ YALE PUBLIC SCHOOLS,1,1,1,36.1217929,-96.69508499999999
 YOUTH ADVANCEMENT ACADEMY,1,1,1,42.2561601,-85.6790745
 ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
     <button style="position: absolute; z-index: 10000; margin-top: 50px; margin-left: 15px;" id="zoom-out">Zoom Out</button>
+    <select style="position: absolute; z-index: 10000; margin-top: 75px; margin-left: 15px;" onchange="filterMarkers(this.value)" id="filter">Filter By
+        <option value="all">Show All</option>
+        <option value="integration">Integration</option>
+        <option value="workbook">Workbooks</option>
+        <option value="pd">Professional Development</option>
+    </select>
     <div id="map"></div>
     <script
       src="https://code.jquery.com/jquery-3.1.1.min.js"
@@ -906,7 +912,18 @@ ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
           center: new google.maps.LatLng(44.3148, -85.6024),
           mapTypeId: 'roadmap'
         });
-
+        filterMarkers = function(category){
+            console.log(category);
+            for (var i = 0, feature; feature = features[i]; i++) {
+                marker = gmarker[i];
+                console.log(marker.filter);
+                if(marker.filter == category || category == 'all'){
+                    marker.setVisible(true);
+                } else {
+                    marker.setVisible(false);
+                }
+            }
+        }
         // var iconBase = 'http://maps.google.com/mapfiles/kml/paddle/';
         var iconBase = 'markers/'
         var icons = {
@@ -946,12 +963,16 @@ ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
             // Nothing? I guess
         });
 
+        var gmarker = [];
+
         function addMarker(feature) {
             var marker = new google.maps.Marker({
                 position: feature.position,
                 icon: icons[feature.type].icon,
+                filter: feature.filter,
                 map: map
             });
+            gmarker.push(marker);
             marker.addListener('click', function(){
                 infowindow.setContent(feature.content);
                 infowindow.open(map, marker);
@@ -959,6 +980,8 @@ ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
                 map.setCenter(marker.getPosition());
             });
         }
+
+
 
         $("#zoom-out").click('on', function(){
             map.setZoom(7),
@@ -1006,7 +1029,8 @@ ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
                 var temp_dict = {
                     position: new google.maps.LatLng(super_big_table[i][4], super_big_table[i][5]),
                     content: contentString,
-                    type: 'integration_no'
+                    type: 'integration_no',
+                    filter: 'integration'
                 }
                 features.push(temp_dict);
             }
@@ -1023,7 +1047,8 @@ ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
                 var temp_dict = {
                     position: new google.maps.LatLng(super_big_table[i][4], super_big_table[i][5]),
                     content: contentString,
-                    type: 'integration_integrate'
+                    type: 'integration_integrate',
+                    filter: 'integration'
                 }
                 features.push(temp_dict);
             }
@@ -1040,7 +1065,8 @@ ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
                 var temp_dict = {
                     position: new google.maps.LatLng(super_big_table[i][4], super_big_table[i][5]),
                     content: contentString,
-                    type: 'integration_contact'
+                    type: 'integration_contact',
+                    filter: 'integration'
                 }
                 features.push(temp_dict);
             }
@@ -1057,7 +1083,8 @@ ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
                 var temp_dict = {
                     position: new google.maps.LatLng(super_big_table[i][4], super_big_table[i][5]),
                     content: contentString,
-                    type: 'integration_prog'
+                    type: 'integration_prog',
+                    filter: 'integration'
                 }
                 features.push(temp_dict);
             }
@@ -1075,7 +1102,8 @@ ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
                 var temp_dict = {
                     position: new google.maps.LatLng(super_big_table[i][4] - .00006, super_big_table[i][5]),
                     content: contentString,
-                    type: 'workbooks1'
+                    type: 'workbooks1',
+                    filter: 'workbook'
                 }
                 features.push(temp_dict);
             }
@@ -1092,7 +1120,8 @@ ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
                 var temp_dict = {
                     position: new google.maps.LatLng(super_big_table[i][4] - .00006, super_big_table[i][5]),
                     content: contentString,
-                    type: 'workbooks2'
+                    type: 'workbooks2',
+                    filter: 'workbook'
                 }
                 features.push(temp_dict);
             }
@@ -1109,7 +1138,8 @@ ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
                 var temp_dict = {
                     position: new google.maps.LatLng(super_big_table[i][4] - .00006, super_big_table[i][5]),
                     content: contentString,
-                    type: 'workbooks3'
+                    type: 'workbooks3',
+                    filter: 'workbook'
                 }
                 features.push(temp_dict);
             }
@@ -1127,7 +1157,8 @@ ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
                 var temp_dict = {
                     position: new google.maps.LatLng(super_big_table[i][4] - .00003, super_big_table[i][5]),
                     content: contentString,
-                    type: 'pd1'
+                    type: 'pd1',
+                    filter: 'pd'
                 }
                 features.push(temp_dict);
             }
@@ -1144,7 +1175,8 @@ ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
                 var temp_dict = {
                     position: new google.maps.LatLng(super_big_table[i][4] - .00003, super_big_table[i][5]),
                     content: contentString,
-                    type: 'pd2'
+                    type: 'pd2',
+                    filter: 'pd'
                 }
                 features.push(temp_dict);
             }
@@ -1161,14 +1193,15 @@ ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
                 var temp_dict = {
                     position: new google.maps.LatLng(super_big_table[i][4] - .00003, super_big_table[i][5]),
                     content: contentString,
-                    type: 'pd3'
+                    type: 'pd3',
+                    filter: 'pd'
                 }
                 features.push(temp_dict);
             }
         }
 
         for (var i = 0, feature; feature = features[i]; i++) {
-          addMarker(feature);
+            addMarker(feature);
         }
       }
     </script>
