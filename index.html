@@ -893,11 +893,27 @@ YALE PUBLIC SCHOOLS,1,1,1,36.1217929,-96.69508499999999
 YOUTH ADVANCEMENT ACADEMY,1,1,1,42.2561601,-85.6790745
 ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
     <button style="position: absolute; z-index: 10000; margin-top: 50px; margin-left: 15px;" id="zoom-out">Zoom Out</button>
-    <select style="position: absolute; z-index: 10000; margin-top: 75px; margin-left: 15px;" onchange="filterMarkers(this.value)" id="filter">Filter By
-        <option value="all">Show All</option>
-        <option value="integration">Integration</option>
-        <option value="workbook">Workbooks</option>
-        <option value="pd">Professional Development</option>
+    <select style="position: absolute; z-index: 10000; margin-top: 75px; margin-left: 15px; width: 250px;" onchange="filterMarkers1(this.value)" id="filter_I">Filter By Integration Status
+        <option value="all">Show All Integration Statuses</option>
+        <option value="show_none">Hide Integration Statuses</option>
+        <option value="integration_no">No Integration</option>
+        <option value="integration_integrate">Integration Complete</option>
+        <option value="integration_prog">Integration In Progress</option>
+        <option value="integration_contact">Integration Contact Made</option>
+    </select>
+    <select style="position: absolute; z-index: 10000; margin-top: 100px; margin-left: 15px; width: 250px;" onchange="filterMarkers2(this.value)" id="filter_W">Filter By Workbook Status
+        <option value="all">Show All Workbook Orders</option>
+        <option value="show_none">Hide Workbook Orders</option>
+        <option value="workbooks3">Workbooks Requested</option>
+        <option value="workbooks1">No Workbooks Requested</option>
+        <option value="workbooks2">Workbooks Sent</option>
+    </select>
+    <select style="position: absolute; z-index: 10000; margin-top: 125px; margin-left: 15px; width: 250px;" onchange="filterMarkers3(this.value)" id="filter_D">Filter By Development Status
+        <option value="all">Show All Development Schedules</option>
+        <option value="show_none">Hide Development Schedules</option>
+        <option value="pd1">Professional Development Not Scheduled</option>
+        <option value="pd3">Professional Development Scheduled</option>
+        <option value="pd2">Professional Development Complete</option>
     </select>
     <img id='loading' src ='loading.gif' alt='loading' height= "100px" width = "100px" style="position: absolute; z-index: 10000000; margin-top: 125px; margin-left: 30px; display: none;">
     <div id="map"></div>
@@ -913,11 +929,47 @@ ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
           center: new google.maps.LatLng(44.3148, -85.6024),
           mapTypeId: 'roadmap'
         });
-        filterMarkers = function(category){
+        filterMarkers1 = function(category){
             $("#loading").show();
             for (var i = 0, feature; feature = features[i]; i++) {
                 marker = gmarker[i];
-                if(marker.filter == category || category == 'all'){
+                if(category == 'show_none' && marker.filter == 'integration') {
+                    marker.setVisible(false);
+                } else if(marker.filter == 'pd' || marker.filter == 'workbook'){
+                    continue;
+                } else if(marker.type == category || category == 'all') {
+                    marker.setVisible(true);
+                } else {
+                    marker.setVisible(false);
+                }
+            }
+            $("#loading").hide();
+        }
+        filterMarkers2 = function(category){
+            $("#loading").show();
+            for (var i = 0, feature; feature = features[i]; i++) {
+                marker = gmarker[i];
+                if(category == 'show_none' && marker.filter == 'workbook') {
+                    marker.setVisible(false);
+                } else if(marker.filter == 'integration' || marker.filter == 'pd'){
+                    continue;
+                } else if(marker.type == category || category == 'all') {
+                    marker.setVisible(true);
+                } else {
+                    marker.setVisible(false);
+                }
+            }
+            $("#loading").hide();
+        }
+        filterMarkers3 = function(category){
+            $("#loading").show();
+            for (var i = 0, feature; feature = features[i]; i++) {
+                marker = gmarker[i];
+                if(category == 'show_none' && marker.filter == 'pd'){
+                    marker.setVisible(false);
+                } else if(marker.filter == 'integration' || marker.filter == 'workbook'){
+                    continue;
+                } else if(marker.type == category || category == 'all'){
                     marker.setVisible(true);
                 } else {
                     marker.setVisible(false);
@@ -970,6 +1022,7 @@ ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999</p>
             var marker = new google.maps.Marker({
                 position: feature.position,
                 icon: icons[feature.type].icon,
+                type: feature.type,
                 filter: feature.filter,
                 map: map
             });

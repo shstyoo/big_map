@@ -78,9 +78,9 @@ for item in bigger_table:
         writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         writer.writerow(item)
 
-# print(integration_index)
-# print(workbook_index)
-# print(PD_index)
+print(integration_index)
+print(workbook_index)
+print(PD_index)
 
 # # Loop through all items
 # for school in big_table:
