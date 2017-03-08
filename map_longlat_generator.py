@@ -52,29 +52,33 @@ for school in big_table:
         continue
     # Get response from Google Map API
     school_format = school[0].replace(" ", "+")
+    print(url + '?address=' + school_format + '&key=' + API_KEY)
     response = urllib.request.urlopen(url + '?address=' + school_format + '&key=' + API_KEY)
-    reader = codecs.getreader("utf-8")
-    data = json.load(reader(response))
+    data = json.loads(response.read())
+    # reader = codecs.getreader("utf-8")
+    # data = json.loads(reader(response))
     # Get lat and long from JSON if results exist
     if data['status'] == 'ZERO_RESULTS':
         print('nothing here')
     else:
         for item in data['results']:
-            # for item2 in item['address_components']:
-            #     if item2['long_name'] == 'Michigan':
-            if len(data['results']) == 1:
-                school.append(item['geometry']['location']['lat'])
-                school.append(item['geometry']['location']['lng'])
-            else:
-                for _type in item['types']:
-                    if _type == 'school':
+            for item2 in item['address_components']:
+                if item2['long_name'] == 'Michigan':
+                    if len(data['results']) == 1:
                         school.append(item['geometry']['location']['lat'])
                         school.append(item['geometry']['location']['lng'])
+                    else:
+                        for _type in item['types']:
+                            if _type == 'school':
+                                school.append(item['geometry']['location']['lat'])
+                                school.append(item['geometry']['location']['lng'])
 
         # Write to file
         with open(output_filename, 'a', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(school)
+        print('wrote')
+        print(school)
 
 end = time.time()
 print(end-start)
