@@ -11,7 +11,7 @@ url = 'https://maps.googleapis.com/maps/api/geocode/json'
 
 # File stuff
 filename = 'csv/states.csv'
-output_filename = 'csv/OUTPUT_states.csv'
+output_filename = 'csv/OUTPUT_states_2.csv'
 
 # Global variables
 big_table = []
@@ -60,16 +60,16 @@ for school in big_table:
         print('nothing here')
     else:
         for item in data['results']:
-            for item2 in item['address_components']:
-                if item2['long_name'] == 'Michigan':
-                    if len(data['results']) == 1:
+            # for item2 in item['address_components']:
+            #     if item2['long_name'] == 'Michigan':
+            if len(data['results']) == 1:
+                school.append(item['geometry']['location']['lat'])
+                school.append(item['geometry']['location']['lng'])
+            else:
+                for _type in item['types']:
+                    if _type == 'school':
                         school.append(item['geometry']['location']['lat'])
                         school.append(item['geometry']['location']['lng'])
-                    else:
-                        for _type in item['types']:
-                            if _type == 'school':
-                                school.append(item['geometry']['location']['lat'])
-                                school.append(item['geometry']['location']['lng'])
 
         # Write to file
         with open(output_filename, 'a', newline='') as csvfile:
