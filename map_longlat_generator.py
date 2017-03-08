@@ -11,7 +11,7 @@ url = 'https://maps.googleapis.com/maps/api/geocode/json'
 
 # File stuff
 filename = 'csv/states.csv'
-output_filename = 'csv/OUTPUT_states_2.csv'
+output_filename = 'csv/OUTPUT_states_final.csv'
 
 # Global variables
 big_table = []
@@ -27,21 +27,21 @@ with open(filename) as csvfile:
     for row in reader:
         temp = []
         temp.append(row[0])
-        if row[1] in integration_index:
-            temp.append(integration_index.index(row[1]))
+        if row[2] in integration_index:
+            temp.append(integration_index.index(row[2]))
         else:
-            integration_index.append(row[1])
-            temp.append(integration_index.index(row[1]))
-        if row[2] in workbook_index:
-            temp.append(workbook_index.index(row[2]))
+            integration_index.append(row[2])
+            temp.append(integration_index.index(row[2]))
+        if row[3] in workbook_index:
+            temp.append(workbook_index.index(row[3]))
         else:
-            workbook_index.append(row[2])
-            temp.append(workbook_index.index(row[2]))
-        if row[3] in PD_index:
-            temp.append(PD_index.index(row[3]))
+            workbook_index.append(row[3])
+            temp.append(workbook_index.index(row[3]))
+        if row[4] in PD_index:
+            temp.append(PD_index.index(row[4]))
         else:
-            PD_index.append(row[3])
-            temp.append(PD_index.index(row[3]))
+            PD_index.append(row[4])
+            temp.append(PD_index.index(row[4]))
         big_table.append(temp)
 
 # Loop through all items
@@ -55,8 +55,6 @@ for school in big_table:
     print(url + '?address=' + school_format + '&key=' + API_KEY)
     response = urllib.request.urlopen(url + '?address=' + school_format + '&key=' + API_KEY)
     data = json.loads(response.read())
-    # reader = codecs.getreader("utf-8")
-    # data = json.loads(reader(response))
     # Get lat and long from JSON if results exist
     if data['status'] == 'ZERO_RESULTS':
         print('nothing here')
@@ -69,7 +67,7 @@ for school in big_table:
                         school.append(item['geometry']['location']['lng'])
                     else:
                         for _type in item['types']:
-                            if _type == 'school':
+                            if _type == 'school' and item2['long_name'] == 'Michigan':
                                 school.append(item['geometry']['location']['lat'])
                                 school.append(item['geometry']['location']['lng'])
 
