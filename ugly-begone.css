@@ -13,6 +13,10 @@
 
 .counter {
     float: right;
+    display: table;
+    text-align: bottom;
+    vertical-align: middle;
+    margin-top: 2px;
 }
 
 #show_filter {

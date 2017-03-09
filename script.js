@@ -88,6 +88,19 @@ function initMap() {
       }
       $("#counter").text('Total: ' + total_count);
   }
+  get_unique_count = function(){
+      var unique_schools = {};
+      for(var i=0, feature; feature=features[i];i++){
+          marker = gmarker[i];
+          if(marker.getVisible()){
+              if(!unique_schools[marker.school]){
+                  unique_schools[marker.school] = 1;
+              }
+          }
+      }
+      var unique_len = Object.keys(unique_schools).length;
+      $("#unique_counter").text('Total Unique: ' + unique_len);
+  }
   get_filters = function(){
       var all_input = $("#filter_options :input");
       var input_len = all_input.length;
@@ -101,6 +114,7 @@ function initMap() {
       }
       get_counts();
       filterMarkers(display_this);
+      get_unique_count();
   }
   filterMarkers = function(category){
       var _category = category;
@@ -160,6 +174,7 @@ function initMap() {
       var marker = new google.maps.Marker({
           position: feature.position,
           icon: icons[feature.type].icon,
+          school: feature.school,
           type: feature.type,
           filter: feature.filter,
           map: map
@@ -226,6 +241,7 @@ function initMap() {
                               '</div>';
           var temp_dict = {
               position: new google.maps.LatLng(super_big_table[i][4], super_big_table[i][5]),
+              school: super_big_table[i][0],
               content: contentString,
               type: 'integration_no',
               filter: 'integration'
@@ -244,6 +260,7 @@ function initMap() {
                               '</div>';
           var temp_dict = {
               position: new google.maps.LatLng(super_big_table[i][4], super_big_table[i][5]),
+              school: super_big_table[i][0],
               content: contentString,
               type: 'integration_integrate',
               filter: 'integration'
@@ -262,6 +279,7 @@ function initMap() {
                               '</div>';
           var temp_dict = {
               position: new google.maps.LatLng(super_big_table[i][4], super_big_table[i][5]),
+              school: super_big_table[i][0],
               content: contentString,
               type: 'integration_contact',
               filter: 'integration'
@@ -280,6 +298,7 @@ function initMap() {
                               '</div>';
           var temp_dict = {
               position: new google.maps.LatLng(super_big_table[i][4], super_big_table[i][5]),
+              school: super_big_table[i][0],
               content: contentString,
               type: 'integration_prog',
               filter: 'integration'
@@ -299,6 +318,7 @@ function initMap() {
                               '</div>';
           var temp_dict = {
               position: new google.maps.LatLng(super_big_table[i][4] - .00006, super_big_table[i][5]),
+              school: super_big_table[i][0],
               content: contentString,
               type: 'workbooks1',
               filter: 'workbook'
@@ -317,6 +337,7 @@ function initMap() {
                               '</div>';
           var temp_dict = {
               position: new google.maps.LatLng(super_big_table[i][4] - .00006, super_big_table[i][5]),
+              school: super_big_table[i][0],
               content: contentString,
               type: 'workbooks2',
               filter: 'workbook'
@@ -335,6 +356,7 @@ function initMap() {
                               '</div>';
           var temp_dict = {
               position: new google.maps.LatLng(super_big_table[i][4] - .00006, super_big_table[i][5]),
+              school: super_big_table[i][0],
               content: contentString,
               type: 'workbooks3',
               filter: 'workbook'
@@ -354,6 +376,7 @@ function initMap() {
                               '</div>';
           var temp_dict = {
               position: new google.maps.LatLng(super_big_table[i][4] - .00003, super_big_table[i][5]),
+              school: super_big_table[i][0],
               content: contentString,
               type: 'pd1',
               filter: 'pd'
@@ -372,6 +395,7 @@ function initMap() {
                               '</div>';
           var temp_dict = {
               position: new google.maps.LatLng(super_big_table[i][4] - .00003, super_big_table[i][5]),
+              school: super_big_table[i][0],
               content: contentString,
               type: 'pd2',
               filter: 'pd'
@@ -390,6 +414,7 @@ function initMap() {
                               '</div>';
           var temp_dict = {
               position: new google.maps.LatLng(super_big_table[i][4] - .00003, super_big_table[i][5]),
+              school: super_big_table[i][0],
               content: contentString,
               type: 'pd3',
               filter: 'pd'
@@ -433,4 +458,5 @@ function initMap() {
         }
     }
     get_counts();
+    get_unique_count();
 }
