@@ -8,6 +8,11 @@
     font-size: 11px;
     left: 0px;
     background: rgba(255, 255, 255, 0.75);
+    width: 325px;
+}
+
+.counter {
+    float: right;
 }
 
 #show_filter {

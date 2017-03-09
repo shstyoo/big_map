@@ -70,6 +70,24 @@ function initMap() {
   $("#filter_options button").on("click", function(){
       get_filters();
   });
+  get_counts = function(){
+      var all_counter = $("#filter_options li");
+      var counter_len = all_counter.length;
+      var total_count = 0;
+      for(var i=0;i<counter_len;i++){
+          var input = all_counter[i].getElementsByTagName("input");
+          var input_len = input.length;
+          if(input_len == 1){
+              var id = "#" + input[0]['id'];
+              if($(id).prop("checked")){
+                  var counts = all_counter[i].getElementsByClassName("counter");
+                  var count_add = parseInt(counts[0]['textContent']);
+                  total_count = total_count + count_add;
+              }
+          }
+      }
+      $("#counter").text('Total: ' + total_count);
+  }
   get_filters = function(){
       var all_input = $("#filter_options :input");
       var input_len = all_input.length;
@@ -81,6 +99,7 @@ function initMap() {
               display_this.push(raw_id);
           }
       }
+      get_counts();
       filterMarkers(display_this);
   }
   filterMarkers = function(category){
@@ -135,6 +154,7 @@ function initMap() {
   });
 
   var gmarker = [];
+  var count_list = {};
 
   function addMarker(feature) {
       var marker = new google.maps.Marker({
@@ -145,6 +165,12 @@ function initMap() {
           map: map
       });
       gmarker.push(marker);
+      // Count each type of marker
+      if(!count_list[feature.type]){
+          count_list[feature.type] = 1;
+      } else {
+          count_list[feature.type] = count_list[feature.type] + 1;
+      }
       marker.addListener('click', function(){
           infowindow.setContent(feature.content);
           infowindow.open(map, marker);
@@ -372,7 +398,39 @@ function initMap() {
       }
   }
 
+  // Start filter counter once
   for (var i = 0, feature; feature = features[i]; i++) {
       addMarker(feature);
   }
+    var keys = [];
+    for (var key in count_list){
+        if(count_list.hasOwnProperty(key)){
+            keys.push(key);
+        }
+    }
+    var key_len = keys.length;
+    for(var i = 0;i<key_len;i++){
+        if(keys[i] == 'integration_no'){
+            $("#counter_int_no").text(count_list[keys[i]]);
+        } else if(keys[i] == 'workbooks1'){
+            $("#counter_work_no").text(count_list[keys[i]]);
+        } else if(keys[i] == 'pd1'){
+            $("#counter_pd_not").text(count_list[keys[i]]);
+        } else if(keys[i] == 'integration_integrate'){
+            $("#counter_int_int").text(count_list[keys[i]]);
+        } else if(keys[i] == 'workbooks2'){
+            $("#counter_work_sent").text(count_list[keys[i]]);
+        } else if(keys[i] == 'integration_contact'){
+            $("#counter_int_cont").text(count_list[keys[i]]);
+        } else if(keys[i] == 'pd2'){
+            $("#counter_pd_yes").text(count_list[keys[i]]);
+        } else if(keys[i] == 'workbooks3'){
+            $("#counter_work_req").text(count_list[keys[i]]);
+        } else if(keys[i] == 'pd3'){
+            $("#counter_pd_sched").text(count_list[keys[i]]);
+        } else if(keys[i] == 'integration_prog'){
+            $("#counter_int_prog").text(count_list[keys[i]]);
+        }
+    }
+    get_counts();
 }
