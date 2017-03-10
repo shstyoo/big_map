@@ -443,7 +443,7 @@ function initMap() {
           }
       };
       xmlhttp.open("GET", url, true);
-      xmlhttp.responseType = 'jsonp';
+      xmlhttp.responseType = 'text';
       xmlhttp.send(null);
   };
 
