@@ -203,7 +203,7 @@ function initMap() {
   });
 
   function loadData(){
-      var url = 'https://docs.google.com/spreadsheets/d/1XM6l6nCfh0xCZ6FuRUj-sfmR5x-WCSZDd22EztqqcBQ/export?format=csv&id=1XM6l6nCfh0xCZ6FuRUj-sfmR5x-WCSZDd22EztqqcBQ&gid=392068151';
+      var url = 'https://crossorigin.me/https://docs.google.com/spreadsheets/d/1XM6l6nCfh0xCZ6FuRUj-sfmR5x-WCSZDd22EztqqcBQ/export?format=csv&id=1XM6l6nCfh0xCZ6FuRUj-sfmR5x-WCSZDd22EztqqcBQ&gid=392068151';
     //   var url = 'https://docs.google.com/spreadsheets/d/1XM6l6nCfh0xCZ6FuRUj-sfmR5x-WCSZDd22EztqqcBQ/pub?gid=392068151&single=true&output=csv&alt=json-in-script';
       var result = '';
       var fuckingugly = document.getElementById("#fuckingugly").innerHTML;
@@ -443,8 +443,7 @@ function initMap() {
             return(features);
           }
       };
-      xmlhttp.open("GET", url, true);
-      xmlhttp.responseType = 'text';
+      xmlhttp.open('GET', url, true);
       xmlhttp.send(null);
   };
 
