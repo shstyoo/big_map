@@ -203,7 +203,7 @@ function initMap() {
   });
 
   function loadData(){
-      var url = 'https://docs.google.com/spreadsheets/d/1XM6l6nCfh0xCZ6FuRUj-sfmR5x-WCSZDd22EztqqcBQ/pub?gid=392068151&single=true&output=csv';
+      var url = 'https://docs.google.com/spreadsheets/d/1XM6l6nCfh0xCZ6FuRUj-sfmR5x-WCSZDd22EztqqcBQ/pub?gid=392068151&single=true&output=csv?key=AIzaSyDQgBmECcYPsVFlY-8wTdJIse3dg3bg350';
       var result = '';
       var fuckingugly = document.getElementById("#fuckingugly").innerHTML;
       var big_table1 = fuckingugly.split("\n");
