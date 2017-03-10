@@ -442,7 +442,7 @@ function initMap() {
             return(features);
           }
       };
-      xmlhttp.open("GET", url, true);
+      xmlhttp.open("GET", url, true, 'steve@wearinteractive.com', 'xAphAn247666');
       xmlhttp.responseType = 'text';
       xmlhttp.send(null);
   };
