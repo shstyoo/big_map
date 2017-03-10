@@ -11,7 +11,7 @@ function initMap() {
   $("#hide_filter").on("click", function(){
       $("#hide_filter").hide();
       $("#show_filter").show();
-      $("#filter_options").animate({'left':"-300px"});
+      $("#filter_options").animate({'left':"-400px"});
   });
   $("#show_filter").on("click", function(){
       $("#show_filter").hide();
@@ -202,261 +202,294 @@ function initMap() {
       map.setCenter(new google.maps.LatLng(44.3148, -85.6024));
   });
 
-  // Ignore the mess just use super_big_table
-  var fuckingugly = document.getElementById("#fuckingugly").innerHTML;
-  var big_table = fuckingugly.split("\n");
-  $uglystring = big_table;
-  var datlen = $uglystring.length;
-  var super_big_table = []
-  for(var i=0;i<datlen;i++){
-      var temp = [];
-      var sub_str = big_table[i].split(",");
-      if(sub_str.length == 4){
-          // Do nothing
-      } else {
-          temp.push(sub_str[0]);
-          temp.push(sub_str[1]);
-          temp.push(sub_str[2]);
-          temp.push(sub_str[3]);
-          temp.push(sub_str[4]);
-          temp.push(sub_str[5]);
-          super_big_table.push(temp);
+  function loadData(){
+      var url = 'https://docs.google.com/spreadsheets/d/1XM6l6nCfh0xCZ6FuRUj-sfmR5x-WCSZDd22EztqqcBQ/pub?gid=392068151&single=true&output=csv';
+      var result = '';
+      var fuckingugly = document.getElementById("#fuckingugly").innerHTML;
+      var big_table1 = fuckingugly.split("\n");
+      $uglystring = big_table1;
+      var datlen1 = $uglystring.length;
+      var super_big_dict = {};
+      for(var i=0;i<datlen1;i++){
+          var temp = [];
+          var sub_str = big_table1[i].split(",");
+          if(sub_str.length == 4){
+              // Do nothing
+          } else {
+              super_big_dict[sub_str[0]] = [sub_str[1],sub_str[2],sub_str[3],sub_str[4],sub_str[5]];
+          }
       }
-  }
-
-  var datalen = super_big_table.length;
+      var int_keys = ['Integration','No Contact','Integrated','Contact Made','In Progress'];
+      var work_keys = ['Workbooks', 'Not Requested', 'Sent', 'Requested'];
+      var pd_keys = ['PDs', 'Not Scheduled', 'Done', 'Scheduled'];
+      var keys = Object.keys(super_big_dict);
+      xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function(){
+          if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
+              result = xmlhttp.responseText;
+              var big_table = result.split("\n");
+              $uglystring = big_table;
+              var datlen = $uglystring.length;
+              var super_big_table = [];
+              for(var i=0;i<datlen;i++){
+                  var sub_str = big_table[i].split(",");
+                  for(var j=0;j<keys.length;j++){
+                      if(sub_str[0] == keys[j]){
+                          super_big_dict[keys[j]][0] = int_keys.indexOf(sub_str[2]).toString();
+                          super_big_dict[keys[j]][1] = work_keys.indexOf(sub_str[3]).toString();
+                          super_big_dict[keys[j]][2] = pd_keys.indexOf(sub_str[4]).toString();
+                      }
+                  }
+              }
+            var key_dict = Object.keys(super_big_dict);
+            var key_len_dict = key_dict.length;
+            for(var k=0;k<key_len_dict;k++){
+                /******* Integration *******/
+                // No Contact
+                if(super_big_dict[key_dict[k]][0] == 1){
+                    var contentString = '<div id="content">' +
+                                            '<div id="school_name">' +
+                                                '<h1 id="school_text">' + key_dict[k] + '</h1>' +
+                                            '</div>' +
+                                            '<div id="integration_text">' +
+                                                '<p id="int_text">No Integration Contact has been made for this school</p>' +
+                                            '</div>' +
+                                        '</div>';
+                    var temp_dict = {
+                        position: new google.maps.LatLng(parseFloat(super_big_dict[key_dict[k]][3]), parseFloat(super_big_dict[key_dict[k]][4])),
+                        school: key_dict[k],
+                        content: contentString,
+                        type: 'integration_no',
+                        filter: 'integration'
+                    }
+                    features.push(temp_dict);
+                }
+                // Integrated
+                else if(super_big_dict[key_dict[k]][0] == 2){
+                    var contentString = '<div id="content">' +
+                                            '<div id="school_name">' +
+                                                '<h1 id="school_text">' + key_dict[k] + '</h1>' +
+                                            '</div>' +
+                                            '<div id="integration_text">' +
+                                                '<p id="int_text">School is already Integrated</p>' +
+                                            '</div>' +
+                                        '</div>';
+                    var temp_dict = {
+                        position: new google.maps.LatLng(parseFloat(super_big_dict[key_dict[k]][3]), parseFloat(super_big_dict[key_dict[k]][4])),
+                        school: key_dict[k],
+                        content: contentString,
+                        type: 'integration_integrate',
+                        filter: 'integration'
+                    }
+                    features.push(temp_dict);
+                }
+                // Contact made
+                else if(super_big_dict[key_dict[k]][0] == 3){
+                    var contentString = '<div id="content">' +
+                                            '<div id="school_name">' +
+                                                '<h1 id="school_text">' + key_dict[k] + '</h1>' +
+                                            '</div>' +
+                                            '<div id="integration_text">' +
+                                                '<p id="int_text">Integration contact has been made for this school</p>' +
+                                            '</div>' +
+                                        '</div>';
+                    var temp_dict = {
+                        position: new google.maps.LatLng(parseFloat(super_big_dict[key_dict[k]][3]), parseFloat(super_big_dict[key_dict[k]][4])),
+                        school: key_dict[k],
+                        content: contentString,
+                        type: 'integration_contact',
+                        filter: 'integration'
+                    }
+                    features.push(temp_dict);
+                }
+                // In Progress
+                else if(super_big_dict[key_dict[k]][0] == 4){
+                    var contentString = '<div id="content">' +
+                                            '<div id="school_name">' +
+                                                '<h1 id="school_text">' + key_dict[k] + '</h1>' +
+                                            '</div>' +
+                                            '<div id="integration_text">' +
+                                                '<p id="int_text">School Integration in progress</p>' +
+                                            '</div>' +
+                                        '</div>';
+                    var temp_dict = {
+                        position: new google.maps.LatLng(parseFloat(super_big_dict[key_dict[k]][3]), parseFloat(super_big_dict[key_dict[k]][4])),
+                        school: key_dict[k],
+                        content: contentString,
+                        type: 'integration_prog',
+                        filter: 'integration'
+                    }
+                    features.push(temp_dict);
+                }
+                /******* Workbooks *******/
+                // Not requested
+                if(super_big_dict[key_dict[k]][1] == 1){
+                    var contentString = '<div id="content">' +
+                                            '<div id="school_name">' +
+                                                '<h1 id="school_text">' + key_dict[k] + '</h1>' +
+                                            '</div>' +
+                                            '<div id="integration_text">' +
+                                                '<p id="int_text">No Workbook orders for this school</p>' +
+                                            '</div>' +
+                                        '</div>';
+                    var temp_dict = {
+                        position: new google.maps.LatLng(parseFloat(super_big_dict[key_dict[k]][3]) - .00006, parseFloat(super_big_dict[key_dict[k]][4])),
+                        school: key_dict[k],
+                        content: contentString,
+                        type: 'workbooks1',
+                        filter: 'workbook'
+                    }
+                    features.push(temp_dict);
+                }
+                // Sent
+                else if(super_big_dict[key_dict[k]][1] == 2){
+                    var contentString = '<div id="content">' +
+                                            '<div id="school_name">' +
+                                                '<h1 id="school_text">' + key_dict[k] + '</h1>' +
+                                            '</div>' +
+                                            '<div id="integration_text">' +
+                                                '<p id="int_text">Workbook orders have already been sent for this school</p>' +
+                                            '</div>' +
+                                        '</div>';
+                    var temp_dict = {
+                        position: new google.maps.LatLng(parseFloat(super_big_dict[key_dict[k]][3]) - .00006, parseFloat(super_big_dict[key_dict[k]][4])),
+                        school: key_dict[k],
+                        content: contentString,
+                        type: 'workbooks2',
+                        filter: 'workbook'
+                    }
+                    features.push(temp_dict);
+                }
+                // Requested
+                else if(super_big_dict[key_dict[k]][1] == 3){
+                    var contentString = '<div id="content">' +
+                                            '<div id="school_name">' +
+                                                '<h1 id="school_text">' + key_dict[k] + '</h1>' +
+                                            '</div>' +
+                                            '<div id="integration_text">' +
+                                                '<p id="int_text">Workbook orders have been requested by this school</p>' +
+                                            '</div>' +
+                                        '</div>';
+                    var temp_dict = {
+                        position: new google.maps.LatLng(parseFloat(super_big_dict[key_dict[k]][3]) - .00006, parseFloat(super_big_dict[key_dict[k]][4])),
+                        school: key_dict[k],
+                        content: contentString,
+                        type: 'workbooks3',
+                        filter: 'workbook'
+                    }
+                    features.push(temp_dict);
+                }
+                /******* PD *******/
+                // Not Scheduled
+                if(super_big_dict[key_dict[k]][2] == 1){
+                    var contentString = '<div id="content">' +
+                                            '<div id="school_name">' +
+                                                '<h1 id="school_text">' + key_dict[k] + '</h1>' +
+                                            '</div>' +
+                                            '<div id="integration_text">' +
+                                                '<p id="int_text">Professional Development has not been scheduled for this school</p>' +
+                                            '</div>' +
+                                        '</div>';
+                    var temp_dict = {
+                        position: new google.maps.LatLng(parseFloat(super_big_dict[key_dict[k]][3]) - .00003, parseFloat(super_big_dict[key_dict[k]][4])),
+                        school: key_dict[k],
+                        content: contentString,
+                        type: 'pd1',
+                        filter: 'pd'
+                    }
+                    features.push(temp_dict);
+                }
+                // Done
+                else if(super_big_dict[key_dict[k]][2] == 2){
+                    var contentString = '<div id="content">' +
+                                            '<div id="school_name">' +
+                                                '<h1 id="school_text">' + key_dict[k] + '</h1>' +
+                                            '</div>' +
+                                            '<div id="integration_text">' +
+                                                '<p id="int_text">Professional Development complete for this school</p>' +
+                                            '</div>' +
+                                        '</div>';
+                    var temp_dict = {
+                        position: new google.maps.LatLng(parseFloat(super_big_dict[key_dict[k]][3]) - .00003, parseFloat(super_big_dict[key_dict[k]][4])),
+                        school: key_dict[k],
+                        content: contentString,
+                        type: 'pd2',
+                        filter: 'pd'
+                    }
+                    features.push(temp_dict);
+                }
+                // Scheduled
+                else if(super_big_dict[key_dict[k]][2] == 3){
+                    var contentString = '<div id="content">' +
+                                            '<div id="school_name">' +
+                                                '<h1 id="school_text">' + key_dict[k] + '</h1>' +
+                                            '</div>' +
+                                            '<div id="integration_text">' +
+                                                '<p id="int_text">Professional Development is scheduled for this school</p>' +
+                                            '</div>' +
+                                        '</div>';
+                    var temp_dict = {
+                        position: new google.maps.LatLng(parseFloat(super_big_dict[key_dict[k]][3]) - .00003, parseFloat(super_big_dict[key_dict[k]][4])),
+                        school: key_dict[k],
+                        content: contentString,
+                        type: 'pd3',
+                        filter: 'pd'
+                    }
+                    features.push(temp_dict);
+                }
+            }
+            start_count_once(features);
+            return(features);
+          }
+      };
+      xmlhttp.open("GET", url, true);
+      xmlhttp.send(null);
+  };
 
   var features = [];
-  for(var i=0;i<datalen;i++){
-      /******* Integration *******/
-      // No Contact
-      if(super_big_table[i][1] == 1){
-          var contentString = '<div id="content">' +
-                                  '<div id="school_name">' +
-                                      '<h1 id="school_text">' + super_big_table[i][0] + '</h1>' +
-                                  '</div>' +
-                                  '<div id="integration_text">' +
-                                      '<p id="int_text">No Integration Contact has been made for this school</p>' +
-                                  '</div>' +
-                              '</div>';
-          var temp_dict = {
-              position: new google.maps.LatLng(super_big_table[i][4], super_big_table[i][5]),
-              school: super_big_table[i][0],
-              content: contentString,
-              type: 'integration_no',
-              filter: 'integration'
-          }
-          features.push(temp_dict);
-      }
-      // Integrated
-      else if(super_big_table[i][1] == 2){
-          var contentString = '<div id="content">' +
-                                  '<div id="school_name">' +
-                                      '<h1 id="school_text">' + super_big_table[i][0] + '</h1>' +
-                                  '</div>' +
-                                  '<div id="integration_text">' +
-                                      '<p id="int_text">School is already Integrated</p>' +
-                                  '</div>' +
-                              '</div>';
-          var temp_dict = {
-              position: new google.maps.LatLng(super_big_table[i][4], super_big_table[i][5]),
-              school: super_big_table[i][0],
-              content: contentString,
-              type: 'integration_integrate',
-              filter: 'integration'
-          }
-          features.push(temp_dict);
-      }
-      // Contact made
-      else if(super_big_table[i][1] == 3){
-          var contentString = '<div id="content">' +
-                                  '<div id="school_name">' +
-                                      '<h1 id="school_text">' + super_big_table[i][0] + '</h1>' +
-                                  '</div>' +
-                                  '<div id="integration_text">' +
-                                      '<p id="int_text">Integration contact has been made for this school</p>' +
-                                  '</div>' +
-                              '</div>';
-          var temp_dict = {
-              position: new google.maps.LatLng(super_big_table[i][4], super_big_table[i][5]),
-              school: super_big_table[i][0],
-              content: contentString,
-              type: 'integration_contact',
-              filter: 'integration'
-          }
-          features.push(temp_dict);
-      }
-      // In Progress
-      else if(super_big_table[i][1] == 4){
-          var contentString = '<div id="content">' +
-                                  '<div id="school_name">' +
-                                      '<h1 id="school_text">' + super_big_table[i][0] + '</h1>' +
-                                  '</div>' +
-                                  '<div id="integration_text">' +
-                                      '<p id="int_text">School Integration in progress</p>' +
-                                  '</div>' +
-                              '</div>';
-          var temp_dict = {
-              position: new google.maps.LatLng(super_big_table[i][4], super_big_table[i][5]),
-              school: super_big_table[i][0],
-              content: contentString,
-              type: 'integration_prog',
-              filter: 'integration'
-          }
-          features.push(temp_dict);
-      }
-      /******* Workbooks *******/
-      // Not requested
-      if(super_big_table[i][2] == 1){
-          var contentString = '<div id="content">' +
-                                  '<div id="school_name">' +
-                                      '<h1 id="school_text">' + super_big_table[i][0] + '</h1>' +
-                                  '</div>' +
-                                  '<div id="integration_text">' +
-                                      '<p id="int_text">No Workbook orders for this school</p>' +
-                                  '</div>' +
-                              '</div>';
-          var temp_dict = {
-              position: new google.maps.LatLng(super_big_table[i][4] - .00006, super_big_table[i][5]),
-              school: super_big_table[i][0],
-              content: contentString,
-              type: 'workbooks1',
-              filter: 'workbook'
-          }
-          features.push(temp_dict);
-      }
-      // Sent
-      else if(super_big_table[i][2] == 2){
-          var contentString = '<div id="content">' +
-                                  '<div id="school_name">' +
-                                      '<h1 id="school_text">' + super_big_table[i][0] + '</h1>' +
-                                  '</div>' +
-                                  '<div id="integration_text">' +
-                                      '<p id="int_text">Workbook orders have already been sent for this school</p>' +
-                                  '</div>' +
-                              '</div>';
-          var temp_dict = {
-              position: new google.maps.LatLng(super_big_table[i][4] - .00006, super_big_table[i][5]),
-              school: super_big_table[i][0],
-              content: contentString,
-              type: 'workbooks2',
-              filter: 'workbook'
-          }
-          features.push(temp_dict);
-      }
-      // Requested
-      else if(super_big_table[i][2] == 3){
-          var contentString = '<div id="content">' +
-                                  '<div id="school_name">' +
-                                      '<h1 id="school_text">' + super_big_table[i][0] + '</h1>' +
-                                  '</div>' +
-                                  '<div id="integration_text">' +
-                                      '<p id="int_text">Workbook orders have been requested by this school</p>' +
-                                  '</div>' +
-                              '</div>';
-          var temp_dict = {
-              position: new google.maps.LatLng(super_big_table[i][4] - .00006, super_big_table[i][5]),
-              school: super_big_table[i][0],
-              content: contentString,
-              type: 'workbooks3',
-              filter: 'workbook'
-          }
-          features.push(temp_dict);
-      }
-      /******* PD *******/
-      // Not Scheduled
-      if(super_big_table[i][3] == 1){
-          var contentString = '<div id="content">' +
-                                  '<div id="school_name">' +
-                                      '<h1 id="school_text">' + super_big_table[i][0] + '</h1>' +
-                                  '</div>' +
-                                  '<div id="integration_text">' +
-                                      '<p id="int_text">Professional Development has not been scheduled for this school</p>' +
-                                  '</div>' +
-                              '</div>';
-          var temp_dict = {
-              position: new google.maps.LatLng(super_big_table[i][4] - .00003, super_big_table[i][5]),
-              school: super_big_table[i][0],
-              content: contentString,
-              type: 'pd1',
-              filter: 'pd'
-          }
-          features.push(temp_dict);
-      }
-      // Done
-      else if(super_big_table[i][3] == 2){
-          var contentString = '<div id="content">' +
-                                  '<div id="school_name">' +
-                                      '<h1 id="school_text">' + super_big_table[i][0] + '</h1>' +
-                                  '</div>' +
-                                  '<div id="integration_text">' +
-                                      '<p id="int_text">Professional Development complete for this school</p>' +
-                                  '</div>' +
-                              '</div>';
-          var temp_dict = {
-              position: new google.maps.LatLng(super_big_table[i][4] - .00003, super_big_table[i][5]),
-              school: super_big_table[i][0],
-              content: contentString,
-              type: 'pd2',
-              filter: 'pd'
-          }
-          features.push(temp_dict);
-      }
-      // Scheduled
-      else if(super_big_table[i][3] == 3){
-          var contentString = '<div id="content">' +
-                                  '<div id="school_name">' +
-                                      '<h1 id="school_text">' + super_big_table[i][0] + '</h1>' +
-                                  '</div>' +
-                                  '<div id="integration_text">' +
-                                      '<p id="int_text">Professional Development is scheduled for this school</p>' +
-                                  '</div>' +
-                              '</div>';
-          var temp_dict = {
-              position: new google.maps.LatLng(super_big_table[i][4] - .00003, super_big_table[i][5]),
-              school: super_big_table[i][0],
-              content: contentString,
-              type: 'pd3',
-              filter: 'pd'
-          }
-          features.push(temp_dict);
-      }
-  }
+  loadData();
 
-  // Start filter counter once
-  for (var i = 0, feature; feature = features[i]; i++) {
-      addMarker(feature);
-  }
-    var keys = [];
-    for (var key in count_list){
-        if(count_list.hasOwnProperty(key)){
-            keys.push(key);
+    start_count_once = function(features){
+        // Start filter counter once
+        for (var i = 0, feature; feature = features[i]; i++) {
+            addMarker(feature);
         }
+          var keys = [];
+          for (var key in count_list){
+              if(count_list.hasOwnProperty(key)){
+                  keys.push(key);
+              }
+          }
+          var key_len = keys.length;
+          for(var i = 0;i<key_len;i++){
+              if(keys[i] == 'integration_no'){
+                  $("#counter_int_no").text(count_list[keys[i]]);
+              } else if(keys[i] == 'workbooks1'){
+                  $("#counter_work_no").text(count_list[keys[i]]);
+              } else if(keys[i] == 'pd1'){
+                  $("#counter_pd_not").text(count_list[keys[i]]);
+              } else if(keys[i] == 'integration_integrate'){
+                  $("#counter_int_int").text(count_list[keys[i]]);
+              } else if(keys[i] == 'workbooks2'){
+                  $("#counter_work_sent").text(count_list[keys[i]]);
+              } else if(keys[i] == 'integration_contact'){
+                  $("#counter_int_cont").text(count_list[keys[i]]);
+              } else if(keys[i] == 'pd2'){
+                  $("#counter_pd_yes").text(count_list[keys[i]]);
+              } else if(keys[i] == 'workbooks3'){
+                  $("#counter_work_req").text(count_list[keys[i]]);
+              } else if(keys[i] == 'pd3'){
+                  $("#counter_pd_sched").text(count_list[keys[i]]);
+              } else if(keys[i] == 'integration_prog'){
+                  $("#counter_int_prog").text(count_list[keys[i]]);
+              }
+          }
+          get_counts();
+          get_unique_count();
     }
-    var key_len = keys.length;
-    for(var i = 0;i<key_len;i++){
-        if(keys[i] == 'integration_no'){
-            $("#counter_int_no").text(count_list[keys[i]]);
-        } else if(keys[i] == 'workbooks1'){
-            $("#counter_work_no").text(count_list[keys[i]]);
-        } else if(keys[i] == 'pd1'){
-            $("#counter_pd_not").text(count_list[keys[i]]);
-        } else if(keys[i] == 'integration_integrate'){
-            $("#counter_int_int").text(count_list[keys[i]]);
-        } else if(keys[i] == 'workbooks2'){
-            $("#counter_work_sent").text(count_list[keys[i]]);
-        } else if(keys[i] == 'integration_contact'){
-            $("#counter_int_cont").text(count_list[keys[i]]);
-        } else if(keys[i] == 'pd2'){
-            $("#counter_pd_yes").text(count_list[keys[i]]);
-        } else if(keys[i] == 'workbooks3'){
-            $("#counter_work_req").text(count_list[keys[i]]);
-        } else if(keys[i] == 'pd3'){
-            $("#counter_pd_sched").text(count_list[keys[i]]);
-        } else if(keys[i] == 'integration_prog'){
-            $("#counter_int_prog").text(count_list[keys[i]]);
-        }
-    }
-    get_counts();
-    get_unique_count();
 }
+
+
+// https://spreadsheets.google.com/feeds/list/1XM6l6nCfh0xCZ6FuRUj-sfmR5x-WCSZDd22EztqqcBQ/od6/public/values?alt=json-in-script&callback=
+// 392068151
+// https://docs.google.com/spreadsheets/d/1XM6l6nCfh0xCZ6FuRUj-sfmR5x-WCSZDd22EztqqcBQ/edit#gid=392068151

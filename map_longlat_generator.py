@@ -44,44 +44,44 @@ with open(filename) as csvfile:
             temp.append(PD_index.index(row[4]))
         big_table.append(temp)
 
-# Loop through all items
-for school in big_table:
-    if(school[0] == 'School+District'):
-        school.append('Latitude')
-        school.append('Longitude')
-        continue
-    # Get response from Google Map API
-    school_format = school[0].replace(" ", "+")
-    print(url + '?address=' + school_format + '&key=' + API_KEY)
-    response = urllib.request.urlopen(url + '?address=' + school_format + '&key=' + API_KEY)
-    data = json.loads(response.read())
-    # Get lat and long from JSON if results exist
-    if data['status'] == 'ZERO_RESULTS':
-        print('nothing here')
-    else:
-        for item in data['results']:
-            for item2 in item['address_components']:
-                if item2['long_name'] == 'Michigan':
-                    if len(data['results']) == 1:
-                        school.append(item['geometry']['location']['lat'])
-                        school.append(item['geometry']['location']['lng'])
-                    else:
-                        for _type in item['types']:
-                            if _type == 'school' and item2['long_name'] == 'Michigan':
-                                school.append(item['geometry']['location']['lat'])
-                                school.append(item['geometry']['location']['lng'])
+print(big_table[1])
+print(integration_index)
+print(workbook_index)
+print(PD_index)
 
-        # Write to file
-        with open(output_filename, 'a', newline='') as csvfile:
-            writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(school)
-        print('wrote')
-        print(school)
+# Loop through all items
+# for school in big_table:
+#     if(school[0] == 'School+District'):
+#         school.append('Latitude')
+#         school.append('Longitude')
+#         continue
+#     # Get response from Google Map API
+#     school_format = school[0].replace(" ", "+")
+#     print(url + '?address=' + school_format + '&key=' + API_KEY)
+#     response = urllib.request.urlopen(url + '?address=' + school_format + '&key=' + API_KEY)
+#     data = json.loads(response.read())
+#     # Get lat and long from JSON if results exist
+#     if data['status'] == 'ZERO_RESULTS':
+#         print('nothing here')
+#     else:
+#         for item in data['results']:
+#             for item2 in item['address_components']:
+#                 if item2['long_name'] == 'Michigan':
+#                     if len(data['results']) == 1:
+#                         school.append(item['geometry']['location']['lat'])
+#                         school.append(item['geometry']['location']['lng'])
+#                     else:
+#                         for _type in item['types']:
+#                             if _type == 'school' and item2['long_name'] == 'Michigan':
+#                                 school.append(item['geometry']['location']['lat'])
+#                                 school.append(item['geometry']['location']['lng'])
+#
+#         # Write to file
+#         with open(output_filename, 'a', newline='') as csvfile:
+#             writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+#             writer.writerow(school)
+#         print('wrote')
+#         print(school)
 
 end = time.time()
 print(end-start)
-
-# print(big_table[1])
-# print(integration_index)
-# print(workbook_index)
-# print(PD_index)

@@ -1,32 +1,4 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Custom Markers</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta charset="utf-8">
-    <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-    <link rel="stylesheet" type="text/css" href="ugly-begone.css">
-  </head>
-  <body>
-      <script
-        src="https://code.jquery.com/jquery-3.1.1.min.js"
-        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-        crossorigin="anonymous">
-      </script>
-      <p style="display: none;" id="#fuckingugly">ACADEMY FOR BUSINESS AND TECHNOLOGY,1,1,1,42.2746709,-83.19667439999999
+ACADEMY FOR BUSINESS AND TECHNOLOGY,1,1,1,42.2746709,-83.19667439999999
 ACADEMY OF DETROIT-WEST,1,1,1,42.4158901,-83.2096471
 ACADEMY OF FLINT,1,1,1,42.9964149,-83.6786164
 ACADEMY OF SOUTHFIELD,1,1,1,42.471916,-83.2243271
@@ -893,52 +865,4 @@ WYANDOTTE CITY SCHOOL DISTRICT,1,1,1,42.2146616,-83.15953999999999
 WYOMING PUBLIC SCHOOLS,1,1,1,42.91036020000001,-85.7153754
 YALE PUBLIC SCHOOLS,1,1,1
 YOUTH ADVANCEMENT ACADEMY,1,1,1,42.2561601,-85.6790745
-ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999,42.8305342,-86.02606589999999</p>
-    <button style="position: absolute; z-index: 10000; margin-top: 75px; margin-left: 15px;" id="zoom-out">Zoom Out</button>
-    <button id="show_filter">Show Filter</button>
-    <button id="hide_filter">Hide Filter</button>
-    <div class="filter_div" id="filter_options">
-        <div class="all_filter" id="all_filter">
-            <ul style="list-style-type: none;">
-                <li><button id="show_all" value="all" style="margin-top: 5px; margin-bot: 5px;">Show all pins</button></li>
-                <li><button id="hide_all" value="show_none" style="margin-top: 5px;">Hide all pins</button></li>
-            </ul>
-        </div>
-        <div class="integration_filter" id="integration_filter">
-            <ul style="list-style-type: none;">
-                <li><button class="hide" id="hide_integration" value="show_none" style="margin-bot: 5px;">Hide all Integration statuses</button><span class="counter" id="counter">Total: </span></li>
-                <li><button class="show" id="show_integration" value="show_integration" style="margin-top: 5px;">Show all Integration statuses</button><span class="counter" id="unique_counter">Total Unique: </span></li>
-                <li><input class="integration show" type="checkbox" id="integration_no" value="integration_no">No Integration<span class="counter" id="counter_int_no"></span></li>
-                <li><input class="integration show" type="checkbox" id="integration_contact" value="integration_contact">Integration Contact Made<span class="counter" id="counter_int_cont"></span></li>
-                <li><input class="integration show" type="checkbox" id="integration_prog" value="integration_prog">Integration in progress<span class="counter" id="counter_int_prog"></span></li>
-                <li><input class="integration show" type="checkbox" id="integration_integrate" value="integration_integrate">Integration complete<span class="counter" id="counter_int_int"></span></li>
-            </ul>
-        </div>
-        <div class="workbook_filter" id="workbook_filter">
-            <ul style="list-style-type: none;">
-                <li><button class="hide" id="hide_workbooks" value="show_none" style="margin-bot: 5px;">Hide all Workbook Orders</button></li>
-                <li><button class="show" id="show_workbooks" value="show_workbooks" style="margin-top: 5px;">Show all Workbook statuses</button></li>
-                <li><input class="workbook show" type="checkbox" id="workbooks1" value="workbooks1">No Workbooks Requested<span class="counter" id="counter_work_no"></span></li>
-                <li><input class="workbook show" type="checkbox" id="workbooks3" value="workbooks3">Workbooks Requested<span class="counter" id="counter_work_req"></span></li>
-                <li><input class="workbook show" type="checkbox" id="workbooks2" value="workbooks2">Workbooks Sent<span class="counter" id="counter_work_sent"></span></li>
-            </ul>
-        </div>
-        <div class="pd_filter" id="pd_filter">
-            <ul style="list-style-type: none;">
-                <li><button class="hide" type="checkbox" id="hide_pd" value="show_none" style="margin-bot: 5px;">Hide all Development statuses</button></li>
-                <li><button class="show" type="checkbox" id="show_pd" value="show_pd" style="margin-top: 5px; margin-bot: 5px;">Show all Development statuses</button></li>
-                <li><input class="pd show" type="checkbox" id="pd1" value="pd1">Professional Development Not Scheduled<span class="counter" id="counter_pd_not"></span></li>
-                <li><input class="pd show" type="checkbox" id="pd3" value="pd3">Professional Development Scheduled<span class="counter" id="counter_pd_sched"></span></li>
-                <li><input class="pd show" type="checkbox" id="pd2" value="pd2">Professional Development Complete<span class="counter" id="counter_pd_yes"></span></li>
-            </ul>
-        </div>
-    </div>
-    <img id='loading' src ='loading.gif' alt='loading' height= "100px" width = "100px" style="position: absolute; z-index: 10000000; margin-top: 125px; margin-left: 30px; display: none;">
-    <div id="map"></div>
-    <script type="text/javascript" src="google-spreadsheet.js"></script>
-    <script type="text/javascript" src="script.js"></script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQgBmECcYPsVFlY-8wTdJIse3dg3bg350&callback=initMap">
-    </script>
-  </body>
-</html>
+ZEELAND PUBLIC SCHOOLS,1,1,1,42.8200472,-86.02846249999999,42.8305342,-86.02606589999999
